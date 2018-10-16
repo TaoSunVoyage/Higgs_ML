@@ -72,9 +72,6 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
             # update w through the stochastic gradient update
             w = w - gamma * grad
 
-        loss = compute_mse_loss(y, tx, w)
-        print("{}: loss: {}".format(n_iter, loss))
-
     # calculate loss
     loss = compute_mse_loss(y, tx, w)
 
@@ -130,13 +127,10 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
             grad = compute_gradient_logistic(y_batch, tx_batch, w)
             # update w through the stochastic gradient update
             w = w - gamma * grad
-        if (n_iter % 100):
-            loss = compute_nl_loss(y, tx, w)
-            print("{}: loss: {}".format(n_iter, loss))
 
     # calculate loss
     loss = compute_nl_loss(y, tx, w)
-
+    
     return w, loss
 
 
