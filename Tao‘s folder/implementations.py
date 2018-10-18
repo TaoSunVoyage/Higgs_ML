@@ -103,9 +103,10 @@ def sigmoid(t):
 
 
 def compute_nl_loss(y, tx, w):
-    """Compute the cost by negative log likelihood."""
+    """Compute the loss by negative log likelihood."""
+    epsilon = 1e-12
     pred = sigmoid(tx.dot(w))
-    loss = y.T.dot(np.log(pred)) + (1 - y).T.dot(np.log(1 - pred))
+    loss = y.T.dot(np.log(pred + epsilon)) + (1 - y).T.dot(np.log(1 - pred + epsilon))
     return np.squeeze(- loss)
 
 
@@ -134,6 +135,11 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
     return w, loss
 
 
+def compute_nl_loss_regularization(y, tx, w, lambda_):
+    """Compute the loss by negative log likelihood and l2 regularization."""
+    return compute_nl_loss(y, tx, w) + lambda_ * np.squeeze(w.T.dot(w))
+
+
 def compute_gradient_reg_logistic(y, tx, w, lambda_):
     """Compute the gradient of regularized logistic regression."""
     w_reg = w
@@ -153,7 +159,7 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
             # update w through the stochastic gradient update
             w = w - gamma * grad
 
-    # calculate loss
-    loss = compute_nl_loss(y, tx, w)
+    # calculate loss with l2 regularization
+    loss = compute_nl_loss_regularization(y, tx, w, lambda_)
 
     return w, loss
