@@ -74,11 +74,10 @@ def drop_na(x):
 def preprocessing(x, y, mean=None, std=None, test=False):
     """Preprocessing data."""
     
-    # get index of four sets
+    # get index of three sets
     jet0_index = np.where(x[:,22]==0)[0]
     jet1_index = np.where(x[:,22]==1)[0]
-    jet2_index = np.where(x[:,22]==2)[0]
-    jet3_index = np.where(x[:,22]==3)[0]
+    jet2_index = np.where(x[:,22]>=2)[0]
     
     # use nan as missing value
     x[x==-999] = np.nan
@@ -99,31 +98,28 @@ def preprocessing(x, y, mean=None, std=None, test=False):
     else:
         x, mean, std = standardize(x)
     
-    # select four groups and drop nan columns
+    # select three groups and drop nan columns
     x_jet0 = drop_na(x[jet0_index, :])
     x_jet1 = drop_na(x[jet1_index, :])
     x_jet2 = drop_na(x[jet2_index, :])
-    x_jet3 = drop_na(x[jet3_index, :])
     
     # fill remained NaN with 0
     x_jet0 = np.nan_to_num(x_jet0)
     x_jet1 = np.nan_to_num(x_jet1)
     x_jet2 = np.nan_to_num(x_jet2)
-    x_jet3 = np.nan_to_num(x_jet3)
     
     
     if test:
-        return [x_jet0, x_jet1, x_jet2, x_jet3], [jet0_index, jet1_index, jet2_index, jet3_index]
+        return [x_jet0, x_jet1, x_jet2], [jet0_index, jet1_index, jet2_index]
     else:
         # build y of four groups
         y_jet0 = y[jet0_index]
         y_jet1 = y[jet1_index]
         y_jet2 = y[jet2_index]
-        y_jet3 = y[jet3_index]
+
         return [(x_jet0, y_jet0), 
                 (x_jet1, y_jet1), 
-                (x_jet2, y_jet2), 
-                (x_jet3, y_jet3)], [mean, std]
+                (x_jet2, y_jet2)], [mean, std]
     
 def build_poly(x, degree):
     """polynomial basis functions for input data x, for j=0 up to j=degree."""
