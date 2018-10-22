@@ -97,16 +97,21 @@ def ridge_regression(y, tx, lambda_):
     return w, loss
 
 
-def sigmoid(t):
-    """Apply sigmoid function on t."""
-    return 1.0 / (1 + np.exp(-t))
+def sigmoid(x):
+    """Apply sigmoid function on x."""
+    return 1.0 / (1 + np.exp(-x))
 
 
 def compute_nl_loss(y, tx, w):
     """Compute the loss by negative log likelihood."""
-    epsilon = 1e-12
+    # Log loss is undefined for pred=0 or pred=1
+    # so probabilities are clipped to max(epsilon, min(1 - epsilon, pred)).
+    epsilon = 1e-15 
     pred = sigmoid(tx.dot(w))
-    loss = y.T.dot(np.log(pred + epsilon)) + (1 - y).T.dot(np.log(1 - pred + epsilon))
+    pred = np.clip(pred, epsilon, 1-epsilon)
+    
+    loss = y.T.dot(np.log(pred)) + (1 - y).T.dot(np.log(1 - pred))
+    
     return np.squeeze(- loss)
 
 
