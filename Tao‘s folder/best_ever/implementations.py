@@ -347,6 +347,6 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
             w = w - gamma * grad
 
     # calculate loss with l2 regularization
-    loss = compute_nl_loss(y, tx, lambda_)
+    loss = compute_nl_loss(y, tx, w)
 
     return w, loss
