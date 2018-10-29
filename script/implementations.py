@@ -275,15 +275,15 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
     if initial_w.shape != (n_features, n_output):
         raise ValueError("Initial weight has wrong shape: ",
                          "{} != {}.".format(initial_w.shape, (n_features, n_output)))
-    
+
     # initialize weight
     w = initial_w
-    
+
     # losses
     losses = []
     # threshold
     threshold = 1e-8
-    
+
     for n_iter in range(max_iters):
         # compute gradient
         grad = compute_gradient_logistic(y, tx, w)
@@ -292,7 +292,7 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
         # calculate loss
         loss = compute_nl_loss(y, tx, w)
         losses.append(loss)
-        
+
         if len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold:
             break
 
@@ -301,9 +301,7 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
 
 def compute_gradient_reg_logistic(y, tx, w, lambda_):
     """Compute the gradient of regularized logistic regression."""
-    w_reg = w
-    w_reg[0] = 0
-    return compute_gradient_logistic(y, tx, w) + 2 * lambda_ * w_reg
+    return compute_gradient_logistic(y, tx, w) + 2 * lambda_ * w
 
 
 def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
@@ -350,18 +348,20 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     losses = []
     # threshold
     threshold = 1e-8
-    
+
     for n_iter in range(max_iters):
         # compute gradient
         grad = compute_gradient_reg_logistic(y, tx, w, lambda_)
         # update w through the gradient update
         w = w - gamma * grad
-        # calculate loss
-        loss = compute_nl_loss(y, tx, w)
+        # calculate loss with penalty
+        loss = compute_nl_loss(y, tx, w) + lambda_ * np.squeeze(w.T.dot(w))
         losses.append(loss)
-        
+
         if len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold:
             break
 
-    return w, losses[-1]
+    # calculate loss
+    loss = compute_nl_loss(y, tx, w)
 
+    return w, loss
