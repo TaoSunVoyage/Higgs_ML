@@ -229,7 +229,7 @@ def compute_nl_loss(y, tx, w):
 
     loss = y.T.dot(np.log(pred)) + (1 - y).T.dot(np.log(1 - pred))
 
-    return np.squeeze(- loss)
+    return np.squeeze(- loss).item()
 
 
 def compute_gradient_logistic(y, tx, w):
@@ -241,7 +241,7 @@ def compute_gradient_logistic(y, tx, w):
 
 
 def logistic_regression(y, tx, initial_w, max_iters, gamma):
-    """Logistic regression using SGD.
+    """Logistic regression using GD.
 
     Parameters
     ----------
@@ -275,21 +275,28 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
     if initial_w.shape != (n_features, n_output):
         raise ValueError("Initial weight has wrong shape: ",
                          "{} != {}.".format(initial_w.shape, (n_features, n_output)))
-
+    
     # initialize weight
     w = initial_w
-
+    
+    # losses
+    losses = []
+    # threshold
+    threshold = 1e-8
+    
     for n_iter in range(max_iters):
-        for y_batch, tx_batch in batch_iter(y, tx, batch_size=1):
-            # compute a stochastic gradient
-            grad = compute_gradient_logistic(y_batch, tx_batch, w)
-            # update w through the stochastic gradient update
-            w = w - gamma * grad
+        # compute gradient
+        grad = compute_gradient_logistic(y, tx, w)
+        # update w through the gradient update
+        w = w - gamma * grad
+        # calculate loss
+        loss = compute_nl_loss(y, tx, w)
+        losses.append(loss)
+        
+        if len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold:
+            break
 
-    # calculate loss
-    loss = compute_nl_loss(y, tx, w)
-
-    return w, loss
+    return w, losses[-1]
 
 
 def compute_gradient_reg_logistic(y, tx, w, lambda_):
@@ -300,7 +307,7 @@ def compute_gradient_reg_logistic(y, tx, w, lambda_):
 
 
 def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
-    """Regularized logistic regression using SGD.
+    """Regularized logistic regression using GD.
 
     Parameters
     ----------
@@ -339,14 +346,22 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     # initialize weight
     w = initial_w
 
+    # losses
+    losses = []
+    # threshold
+    threshold = 1e-8
+    
     for n_iter in range(max_iters):
-        for y_batch, tx_batch in batch_iter(y, tx, batch_size=1):
-            # compute a stochastic gradient with regularization
-            grad = compute_gradient_reg_logistic(y_batch, tx_batch, w, lambda_)
-            # update w through the stochastic gradient update
-            w = w - gamma * grad
+        # compute gradient
+        grad = compute_gradient_reg_logistic(y, tx, w, lambda_)
+        # update w through the gradient update
+        w = w - gamma * grad
+        # calculate loss
+        loss = compute_nl_loss(y, tx, w)
+        losses.append(loss)
+        
+        if len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold:
+            break
 
-    # calculate loss with l2 regularization
-    loss = compute_nl_loss(y, tx, w)
+    return w, losses[-1]
 
-    return w, loss
