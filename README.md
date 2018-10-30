@@ -5,13 +5,15 @@ EPFL CS-433 Machine Learning Project 1
 
 **`Team Members`:** Tao Sun, Xiao Zhou, Jimin Wang
 
+This project held [an InClass Prediction Competition in Kaggle](https://www.kaggle.com/c/epfml18-higgs), which is a copy of [the earlier official Kaggle competition by CERN](https://www.kaggle.com/c/higgs-boson). Our team **RED** finally ranked 11 in all 201 teams with score 0.83661.
+
 ## Instructions
 
 In order to reproduce the result we submitted to Kaggle, please follow the instructions as following:
 
 1. Please make sure ```Python 3.6``` and ```NumPy>=1.15``` are installed.
-2. Kindly download dataset from [Kaggle competition](https://www.kaggle.com/c/11051/download-all), and put ```train.csv``` and ```test.csv``` into the ```\data``` folder.
-3. Go to `\script` folder and run ```run.py```. You will get ```submission.csv``` for Kaggle in the ```\submission``` folder.
+2. Kindly download dataset from [Kaggle competition dataset](https://www.kaggle.com/c/11051/download-all), and put ```train.csv``` and ```test.csv``` into the ```data\``` folder.
+3. Go to `script\` folder and run ```run.py```. You will get ```submission.csv``` for Kaggle in the ```submission\``` folder.
 
 ~~~~shell
 cd script
@@ -37,7 +39,7 @@ Helper functions for data preprocessing, feature engineering and regression mode
   - `get_jet_index`: Get the index of three groups.
   - `build_poly_feature`: Build polynomial features for input data.
 
-### ```implementation.py```
+### ```implementations.py```
 
 Six basic machine learning methods with some supported functions.
 
