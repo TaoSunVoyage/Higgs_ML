@@ -1,11 +1,12 @@
 # Higgs Boson Machine Learning Challenge
-EPFL CS-433 Machine Learning Project 1
+EPFL [CS-433 Machine Learning](https://mlo.epfl.ch/page-157255-en-html/) - Project 1
+
+This repository contains our winning solution to [an InClass Prediction Competition in Kaggle](https://www.kaggle.com/c/epfml18-higgs), which is a copy of [the earlier official Kaggle competition by CERN](https://www.kaggle.com/c/higgs-boson). Our team **RED** finally ranked 11 in all 201 teams with score 0.83661.
 
 **`Team`**: **RED**
 
 **`Team Members`:** Tao Sun, Xiao Zhou, Jimin Wang
 
-This project held [an InClass Prediction Competition in Kaggle](https://www.kaggle.com/c/epfml18-higgs), which is a copy of [the earlier official Kaggle competition by CERN](https://www.kaggle.com/c/higgs-boson). Our team **RED** finally ranked 11 in all 201 teams with score 0.83661.
 
 ## Instructions
 
